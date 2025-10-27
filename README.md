@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # equities-xva-validation-bridge
 =======
 # Equities & XVA – Validation-to-FO Bridge
