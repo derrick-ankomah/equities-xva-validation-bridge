@@ -1,0 +1,7 @@
+{
+  "local_mean": 0.0067,
+  "local_p95": 0.0067,
+  "global_mean": 1.1686,
+  "global_p95": 2.8117,
+  "result": "FAIL"
+}

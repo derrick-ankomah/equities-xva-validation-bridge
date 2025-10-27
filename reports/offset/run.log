@@ -1,0 +1,14 @@
+[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000346 seconds.
+You can set `force_col_wise=true` to remove the overhead.
+[LightGBM] [Info] Total Bins 1020
+[LightGBM] [Info] Number of data points in the train set: 3750, number of used features: 4
+[LightGBM] [Info] Start training from score 1.338552
+Base R2: 0.9786295971453062
+Top negative mean residual groups (most underpriced):
+  group=0 mean_res=-0.0077
+  group=3 mean_res=-0.0064
+  group=2 mean_res=-0.0042
+  group=5 mean_res=-0.0034
+  group=1 mean_res=-0.0025
+Fixed R2: 0.9790945092184015
+Lift in R2 via offset: 0.0004649120730952916
