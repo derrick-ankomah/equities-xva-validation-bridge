@@ -1,5 +1,3 @@
-# equities-xva-validation-bridge
-=======
 # Equities & XVA – Validation-to-FO Bridge
 
 This monorepo contains **three production-style, research-grade projects** that map your **retail credit scoring model validation** toolkit directly into **Front-Office Equities/XVA** problems.
