@@ -1,11 +1,11 @@
 # Equities & XVA – Validation-to-FO Bridge
 
-This monorepo contains **three production-style, research-grade projects** that map your **retail credit scoring model validation** toolkit directly into **Front-Office Equities/XVA** problems.
+This monorepo contains **three production-style, research-grade projects** mapping **retail credit scoring model validation** toolkit directly into **Front-Office Equities/XVA** problems.
 
-> **Core through-line**: the same validation primitives you used in retail (SVD/Cholesky perturbations, conformal + bootstrap uncertainty, offset residual learners) are *powerful and transferable* for market risk, trading, and equity-derivatives pricing.
+> **Core through-line**: validation primitives used in retail credit scoring model validation (including SVD/Cholesky perturbations, conformal + bootstrap uncertainty, offset residual learners) are *powerful and transferable* for market risk, trading, and equity-derivatives pricing.
 
-## Why this repo fits the job
-- **FO Quant fit**: Implements *forecasting, optimization, and risk mitigation* in equities; shows *model design, code quality, C++ performance, and docs* aligned with Agile SDLC.
+## Structure of each project in monorepo and how they align with FO Quant tasks
+- **FO Quant tasks**: Implements *forecasting, optimization, and risk mitigation* in equities; shows *model design, code quality, C++ performance, and docs* aligned with Agile SDLC.
 - **Cross-asset platform mindset**: Each project uses shared patterns (data, features, evaluation, CI-ready layout), making integration into a *holistic quant platform* straightforward.
 - **C++ acceleration**: Hot loops (linear algebra, bootstrapping, residual stats) are implemented with **pybind11** C++ extensions. This improves:
   - **Throughput & latency** on large recalcs (e.g., intraday risk or batch reprice),
@@ -32,26 +32,14 @@ Each project includes:
 - **Notebooks**: tiny starters to reproduce key figures quickly.
 - **`README.md`**: FO narrative, how-to-run, and acceptance criteria.
 
-## Build & Run (macOS)
-```bash
-# Prereqs
-xcode-select --install            # compilers
-python3 -m venv .venv && source .venv/bin/activate
-pip install --upgrade pip wheel build pybind11 scikit-build-core numpy pandas scipy scikit-learn lightgbm matplotlib
 
-# Build C++ modules for each project
-for d in 01_robustness_svd_cholesky 02_uncertainty_conformal_bootstrap 03_offset_model_weakness; do
-  (cd $d/cpp && python -m build && pip install dist/*.whl)
-done
-```
+## Adapting *credit scoring validation* methods to models in Equities/XVA
 
-## Why *these* methods signal original thinking in Equities/XVA
-
-- **SVD/Cholesky perturbations**: In retail, you perturbed inputs to test **local/global stability**. In equities/XVA, perturb **risk factor covariance** or **feature embeddings** to emulate **microstructure noise**, **regime shifts**, or **vol surface shocks**. SVD helps isolate **low-energy/ill-conditioned directions**; Cholesky supports **structured draws** from a target covariance.
+- **SVD/Cholesky perturbations**: In credit scoring validation, inputs are perturbed to test **local/global stability**. In equities/XVA, **risk factor covariance** or **feature embeddings** are perturbed to emulate **microstructure noise**, **regime shifts**, or **vol surface shocks**. SVD helps isolate **low-energy/ill-conditioned directions**; Cholesky supports **structured draws** from a target covariance.
 
 - **Conformal + Bootstrap**: Conformal provides **model-agnostic coverage** for **forecast intervals**; bootstrap retraining quantifies **parameter & data uncertainty**. Together they provide **decision-grade bands** for **position sizing** and **limit setting**—directly actionable for trading and risk.
 
-- **Offset residual learners**: Your retail offset test to find **global/local weakness** becomes a **bias detector** for FO models (e.g., underpricing OTM puts, short-tenor smile). The offset learner maps *where* and *why* the base model errs and offers **low-complexity fixes** that preserve interpretability.
+- **Offset residual learners**: Performance weakness detection tests via offset learners used to find **global/local weakness** become **bias detectors** for FO models (e.g., underpricing OTM puts, short-tenor smile). The offset learner maps *where* and *why* the base model errs and offers **low-complexity fixes** that preserve interpretability.
 
 ---
 
