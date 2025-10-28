@@ -1,27 +1,56 @@
 name: Build Demo Reports
-on: [push]
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with: { python-version: '3.11' }
-      - run: python -m pip install --upgrade pip
-      - run: pip install -r 01_robustness_svd_cholesky/python/requirements.txt
-      - run: pip install -r 02_uncertainty_conformal_bootstrap/python/requirements.txt
-      - run: pip install -r 03_offset_model_weakness/python/requirements.txt || true
-      - run: python 01_robustness_svd_cholesky/python/run_robustness.py
-      - run: python 02_uncertainty_conformal_bootstrap/python/run_uncertainty.py
-      - run: python 03_offset_model_weakness/python/run_offset.py || true
-      - name: Upload Pages artifact
+
+      - name: Python deps (core + project)
+        run: |
+          python -m pip install --upgrade pip wheel setuptools pybind11
+          pip install -r 01_robustness_svd_cholesky/python/requirements.txt
+          pip install -r 02_uncertainty_conformal_bootstrap/python/requirements.txt
+          pip install -r 03_offset_model_weakness/python/requirements.txt || true
+
+      - name: Build & install C++ extensions (fastops) for all projects
+        run: |
+          set -e
+          for d in 01_robustness_svd_cholesky 02_uncertainty_conformal_bootstrap 03_offset_model_weakness; do
+            python -m pip install "$d/cpp"
+          done
+          python - <<'PY'
+import fastops, sys
+print("fastops available at:", getattr(fastops, "__file__", "<unknown>"))
+PY
+
+      - name: Run pipelines to produce reports/
+        run: |
+          python 01_robustness_svd_cholesky/python/run_robustness.py
+          python 02_uncertainty_conformal_bootstrap/python/run_uncertainty.py
+          # LightGBM may not have OpenMP on ubuntu runner; don't fail the whole job
+          python 03_offset_model_weakness/python/run_offset.py || true
+
+      - name: Upload Pages artifact (reports/)
         uses: actions/upload-pages-artifact@v3
         with:
           path: reports
+
   deploy:
     needs: build
-    permissions: { pages: write, id-token: write }
+    permissions:
+      pages: write
+      id-token: write
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
