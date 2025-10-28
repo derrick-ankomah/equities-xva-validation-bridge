@@ -1,3 +1,3 @@
 # Uncertainty Summary
 
-- Conformal radius **q = 0.095800**
+- Conformal radius **q = 0.095500**
